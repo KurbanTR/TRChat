@@ -6,7 +6,7 @@ import { Home, FullPost, Registration, AddPost, Login } from "./pages";
 import { useEffect } from "react";
 import { fetchAuthMe, selectIsAuth } from "./redux/slices/auth";
 
-export const serverUrl = 'http://localhost:5137'
+export const serverUrl = 'https://trchatback.onrender.com'
 
 function App() {
   const dispatch = useDispatch()
