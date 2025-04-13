@@ -1,0 +1,42 @@
+.root {
+  width: 400px;
+  padding: 50px;
+  border: 1px solid #dedede;
+  margin: 50px auto;
+}
+
+.field {
+  margin-bottom: 20px !important;
+}
+
+.title {
+  text-align: center !important;
+  font-weight: bold !important;
+  margin-bottom: 30px !important;
+}
+
+.avatarContainer {
+  display: flex;  
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  cursor: pointer;
+}
+
+.avatar div {
+  opacity: .7;
+}
+
+.avatar img{
+  opacity: 1;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar:hover div {
+  opacity: 1;
+}
