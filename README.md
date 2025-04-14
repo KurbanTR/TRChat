@@ -32,12 +32,3 @@ TRChat — это:
 - React Markdown
 
 ---
-
-## ⚙️ Запуск проекта
-```bash
-npm start
-
-### 📦 Установка зависимостей:
-```bash
-npm install
-cd client && npm install
