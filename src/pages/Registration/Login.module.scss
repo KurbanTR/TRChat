@@ -19,24 +19,28 @@
   display: flex;  
   justify-content: center;
   margin-bottom: 30px;
+
+  .avatar {
+    cursor: pointer;
+
+    div {
+      opacity: .7;
+    }
+
+    img {
+      opacity: 1;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    
+    &:hover div {
+      opacity: 1;
+    }
+  }
+
 }
 
-.avatar {
-  cursor: pointer;
-}
 
-.avatar div {
-  opacity: .7;
-}
 
-.avatar img{
-  opacity: 1;
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.avatar:hover div {
-  opacity: 1;
-}

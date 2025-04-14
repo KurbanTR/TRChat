@@ -5,3 +5,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #F5F5F5 !important;
 }
+
+.container{
+  width: 71.5em;
+}
+
+@media (max-width: 1200px) {
+  .container{
+    width: 99%;
+  }
+}

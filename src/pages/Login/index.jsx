@@ -8,8 +8,10 @@ import Button from "@mui/material/Button";
 import { useForm } from 'react-hook-form'
 import styles from "./Login.module.scss";
 import { fetchAuth, selectIsAuth } from "../../redux/slices/auth";
+import { useState } from 'react';
 
 export const Login = () => {
+  const [isLoad, setLoad] = useState(false)
   const isAuth = useSelector(selectIsAuth)
   const dispatch = useDispatch()
 
@@ -22,6 +24,7 @@ export const Login = () => {
   })
 
   const onSubmit = async (values) => {
+    setLoad(true)
     const data = await dispatch(fetchAuth(values))
 
     if(!data.payload) {
@@ -31,6 +34,7 @@ export const Login = () => {
     if('token' in data.payload) {
       localStorage.setItem('token', data.payload.token)
     }
+    setLoad(false)
   }
 
   if(isAuth) {
@@ -59,7 +63,7 @@ export const Login = () => {
           helperText={errors.password?.message}
           {...register('password', { required: 'Укажите пароль' })}
           fullWidth />
-        <Button disabled={!isValid} type='submit' size="large" variant="contained" fullWidth>
+        <Button disabled={!isValid || isLoad} type='submit' size="large" variant="contained" fullWidth>
           Войти
         </Button>
       </form>

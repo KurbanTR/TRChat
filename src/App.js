@@ -10,7 +10,7 @@ export const serverUrl = 'https://trchatback.onrender.com'
 
 function App() {
   const dispatch = useDispatch()
-  const isAuth = useSelector(selectIsAuth)
+  const isAuth = useSelector(selectIsAuth)  
 
   useEffect(() => {
     dispatch(fetchAuthMe())    
@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       <Header />
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" >
         <Routes>
           <Route path="/" element={<Home />}/>
           <Route path="/tags/:tag" element={<Home />}/>

@@ -40,18 +40,18 @@ export const FullPost = () => {
         }}
         createdAt={data.createdAt}
         viewsCount={data.viewsCount}
-        commentsCount={3}
+        commentsCount={data.comments.length}
         tags={data.tags}
         isFullPost
       >
         <ReactMarkdown children={data.text} />
       </Post>
-      <CommentsBlock
+      {<CommentsBlock
         items={data.comments}
         isLoading={false}
       >
         {isAuth && <Index />}
-      </CommentsBlock>
+      </CommentsBlock>}
     </>
   );
 };

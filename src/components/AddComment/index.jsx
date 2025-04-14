@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
 import styles from "./AddComment.module.scss";
 import TextField from "@mui/material/TextField";
@@ -10,11 +10,18 @@ import { serverUrl } from '../../App';
 
 export const Index = () => {
   const [text, setText] = useState('');
+  const [isValid, setValid] = useState(false);
   const { data } = useSelector(state => state.auth)
   const { id } = useParams()
 
+  useEffect(() => {
+    if (text === '') return setValid(false) 
+      setValid(true)   
+  }, [text])
+
   const onSubmit = async (event) => {
     event.preventDefault();
+    setValid(false)
     try {
 
       const fileds = {
@@ -25,10 +32,11 @@ export const Index = () => {
       const { data } = await axios.post(`/comments/${id}`, fileds)      
       console.log(data);
       setText('')
-      
+      setValid(true)      
     } catch (err) {
       console.warn(err);
-      alert('Ошибка при создании статьи!')
+      alert('Ошибка при создании комментария!')
+      setValid(true)
     }
   }
   return (
@@ -48,7 +56,7 @@ export const Index = () => {
             multiline
             fullWidth
           />
-          <Button type="submit" variant="contained">Отправить</Button>
+          <Button disabled={!isValid} type="submit" variant="contained">Отправить</Button>
         </form>
       </div>
     </>

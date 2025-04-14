@@ -18,6 +18,7 @@ export const AddPost = () => {
   const nav = useNavigate()
   const inputFileRef = useRef(null)
   // const [isLoading, setLoading] = useState(false);
+  const [isValid, setValid] = useState(false);
   const isAuth = useSelector(selectIsAuth)
   const [imageUrl, setImageUrl] = useState('');
   const [text, setText] = useState('');
@@ -25,6 +26,11 @@ export const AddPost = () => {
   const [tags, setTags] = useState('');
 
   const isEditing = Boolean(id)
+
+  useEffect(() => {
+    if (text === '' || title === '') return setValid(false) 
+      setValid(true)   
+  }, [text, title])
 
   const handleChangeFile = async (event) => {
     try {
@@ -50,6 +56,7 @@ export const AddPost = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    setValid(false)
     try {
       // setLoading(true)
 
@@ -64,11 +71,13 @@ export const AddPost = () => {
         ? await axios.patch(`/posts/${id}`, fileds)
         : await axios.post('/posts', fileds)
       
+      setValid(true)
       const _id = isEditing ? id : data._id
       nav(`/posts/${_id}`)
     } catch (err) {
       console.warn(err);
       alert('Ошибка при создании статьи!')
+      setValid(true)
     }
   }
 
@@ -86,8 +95,7 @@ export const AddPost = () => {
     }
   }, [id])
 
-  const options = useMemo(
-    () => ({
+  const options = useMemo(() => ({
       spellChecker: false,
       maxHeight: '400px',
       autofocus: true,
@@ -112,7 +120,7 @@ export const AddPost = () => {
   
   return (
     <Paper style={{ padding: 30 }}>
-      <Button onClick={() => inputFileRef.current && inputFileRef.current.click()} variant="outlined" size="large">
+      <Button onClick={() => inputFileRef.current && inputFileRef.current.click()} className={styles.button} variant="outlined" size="large">
         Загрузить превью
       </Button>
       <input ref={inputFileRef} type="file" onChange={handleChangeFile} hidden />
@@ -144,7 +152,7 @@ export const AddPost = () => {
           fullWidth />
         <SimpleMDE className={styles.editor} value={text} onChange={onChange} options={options} />
         <div className={styles.buttons}>
-          <Button type='submit' size="large" variant="contained">
+          <Button disabled={!isValid} type='submit' size="large" variant="contained">
             {isEditing ? 'Сохранить' : 'Опубликовать'}
           </Button>
           <Link to="/">

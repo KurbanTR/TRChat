@@ -5,3 +5,19 @@
 .title {
   padding: 15px 15px 0 15px;
 }
+
+@media (max-width: 599.9px) {
+  .root {
+    width: 94vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .root {
+    margin-bottom: 10px;
+  }
+  
+  .title {
+    padding: 10px 10px 0 10px;
+  }
+}

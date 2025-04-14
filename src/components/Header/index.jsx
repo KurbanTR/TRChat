@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import styles from './Header.module.scss';
-import Container from '@mui/material/Container';
+// import Container from '@mui/material/Container';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, selectIsAuth } from '../../redux/slices/auth';
 
@@ -16,7 +16,7 @@ export const Header = () => {
 
   return (
     <div className={styles.root}>
-      <Container maxWidth="lg">
+      <div className={styles.contaiber}>
         <div className={styles.inner}>
           <Link className={styles.logo} to="/">
             <div>TRChat</div>
@@ -43,7 +43,7 @@ export const Header = () => {
             )}
           </div>
         </div>
-      </Container>
+      </div>
     </div>
   );
 };

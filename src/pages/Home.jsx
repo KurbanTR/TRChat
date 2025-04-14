@@ -33,19 +33,49 @@ export const Home = () => {
   }
   
   return (
-    <>
-      {isPostsByTag
-      ?
-        <h1 style={{color: 'black', opacity: .3, fontSize: '3em'}}>
-          #{tag}
-        </h1>
-      : 
-        <Tabs style={{ marginBottom: 15 }} value={tab} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Новые" value='new' />
-          <Tab label="Популярные" value='popular' />
-        </Tabs>
-      }
-      <Grid container spacing={4}>
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <div className='container'>
+        {isPostsByTag
+        ?
+          <h1 style={{color: 'black', opacity: .3, fontSize: '3em'}}>
+            #{tag}
+          </h1>
+        : 
+          <Tabs
+            value={tab}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{
+              mb: 2,
+              minHeight: 0, 
+              height: 'fit-content',
+              '& .MuiTabs-flexContainer': {
+                minHeight: 0,
+              },
+              '& .MuiTab-root': {
+                minHeight: 0,
+                height: '25px',
+                minWidth: 0,
+                width: 'auto',
+                fontSize: {
+                  xs: '12px',
+                  sm: '14px',
+                },
+                padding: {
+                  xs: '2px 4px',
+                  sm: '4px 8px',
+                },
+              },
+            }}
+          >
+            <Tab label="Новые" value="new" />
+            <Tab label="Популярные" value="popular" />
+          </Tabs>    
+        }
+      </div>
+      <Grid container spacing={{ xs: 1, sm: 2, md: 4 }} sx={{display: {xs: 'block', sm: 'flex'}}}>
         <Grid xs={8} item>
           {(isPostsLoading ? [...Array(5)] : posts.items).map((item, index) => (
             <Post
@@ -59,18 +89,18 @@ export const Home = () => {
               }}
               createdAt={item?.createAt}
               viewsCount={item?.viewsCount}
-              commentsCount={3}
+              commentsCount={comments.items.length}
               tags={item?.tags}
               isLoading={isPostsLoading}
               isEditable={userData?._id === item?.user?._id}
             />
           ))}
         </Grid>
-        <Grid xs={4} item>
+        <Grid xs={4} item sx={{paddingLeft: {xs: 0, sm: 2}}}>
           { (tags.status === 'loaded' && tags.items.length !== 0) && <TagsBlock items={tags.items} isLoading={isTagsLoading} />}
           { (comments.status === 'loaded' && comments.items.length !== 0) && <CommentsBlock items={comments.items} isLoading={false} />}
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 };
