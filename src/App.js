@@ -7,8 +7,8 @@ import { useEffect } from "react";
 import { fetchAuthMe, selectIsAuth } from "./redux/slices/auth";
 import NotFound from "./components/NotFound";
 
-// export const serverUrl = 'https://trchatback.onrender.com'
-export const serverUrl = 'http://localhost:5137'
+export const serverUrl = 'https://trchatback.onrender.com'
+// export const serverUrl = 'http://localhost:5137'
 
 function App() {
   const dispatch = useDispatch()
