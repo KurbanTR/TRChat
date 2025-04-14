@@ -5,8 +5,10 @@ import { Header } from "./components";
 import { Home, FullPost, Registration, AddPost, Login } from "./pages";
 import { useEffect } from "react";
 import { fetchAuthMe, selectIsAuth } from "./redux/slices/auth";
+import NotFound from "./components/NotFound";
 
-export const serverUrl = 'https://trchatback.onrender.com'
+// export const serverUrl = 'https://trchatback.onrender.com'
+export const serverUrl = 'http://localhost:5137'
 
 function App() {
   const dispatch = useDispatch()
@@ -28,6 +30,7 @@ function App() {
           <Route path="/add-post" element={<AddPost />}/>
           <Route path="/login" element={<Login />}/>
           <Route path="/register" element={<Registration />}/>
+          <Route path="*" element={<NotFound message="Вернись на главную страницу!" />}/>
         </Routes>
       </Container>
     </>

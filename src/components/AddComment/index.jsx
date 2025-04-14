@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import axios from "../../axios";
 import { useParams } from 'react-router-dom';
 import { serverUrl } from '../../App';
+import { showMessage } from '../Alert/showMessage';
 
 export const Index = () => {
   const [text, setText] = useState('');
@@ -35,7 +36,7 @@ export const Index = () => {
       setValid(true)      
     } catch (err) {
       console.warn(err);
-      alert('Ошибка при создании комментария!')
+      showMessage('Ошибка при создании комментария!', 'error')
       setValid(true)
     }
   }
@@ -44,7 +45,7 @@ export const Index = () => {
       <div className={styles.root}>
         <Avatar
           classes={{ root: styles.avatar }}
-          src={`${serverUrl}/${data.avatarUrl}`}
+          src={`${serverUrl}${data.avatarUrl}`}
         />
         <form onSubmit={onSubmit} className={styles.form}>
           <TextField

@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form'
 import styles from "./Login.module.scss";
 import { fetchAuth, selectIsAuth } from "../../redux/slices/auth";
 import { useState } from 'react';
+import { showMessage } from '../../components/Alert/showMessage';
 
 export const Login = () => {
   const [isLoad, setLoad] = useState(false)
@@ -25,10 +26,12 @@ export const Login = () => {
 
   const onSubmit = async (values) => {
     setLoad(true)
+    showMessage('Авторизация', 'info')
     const data = await dispatch(fetchAuth(values))
 
     if(!data.payload) {
-      alert('Не удалось авторизоваться')
+      setLoad(false)
+      return showMessage('Не удалось авторизоваться', 'error')
     } 
 
     if('token' in data.payload) {

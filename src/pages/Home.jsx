@@ -9,6 +9,7 @@ import { CommentsBlock } from '../components/CommentsBlock';
 import { fetchPosts, fetchTags } from '../redux/slices/posts';
 import { useParams } from 'react-router-dom';
 import { fetchComments } from '../redux/slices/comments';
+import NotFound from '../components/NotFound';
 
 export const Home = () => {
   const {tag} = useParams()
@@ -32,6 +33,8 @@ export const Home = () => {
     setTab(newValue)
   }
   
+  if (!isPostsLoading && posts.items.length < 1) return <NotFound message="Нет статей"/>
+
   return (
     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <div className='container'>

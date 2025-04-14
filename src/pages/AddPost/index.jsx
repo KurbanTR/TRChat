@@ -10,6 +10,7 @@ import styles from './AddPost.module.scss';
 import { selectIsAuth } from '../../redux/slices/auth';
 import axios from '../../axios'
 import { serverUrl } from '../../App';
+import { showMessage } from '../../components/Alert/showMessage';
 
 
 export const AddPost = () => {
@@ -33,22 +34,41 @@ export const AddPost = () => {
   }, [text, title])
 
   const handleChangeFile = async (event) => {
+    setValid(false); 
+    showMessage('Загрузка превью', 'info')
     try {
-      const formData = new FormData()
-      const file = event.target.files[0]
-      formData.append('image', file)
-      const { data } = await axios.post('/upload', formData)
+      const file = event.target.files[0];
+      if (!file) {
+        showMessage('Файл не выбран!', 'error');
+        return;
+      }  
+      const formData = new FormData();
+      formData.append('image', file);  
+      formData.append('id', id)
+      const { data } = await axios.post('/upload', formData);  
+      
       setImageUrl(data.url);
-      console.log(data.url);      
+      setValid(true);  
     } catch (err) {
+      setValid(true);
       console.warn(err);
-      alert('Ошибка при загрузке файла!')
+      showMessage('Ошибка при загрузке файла!', 'error');
+    }
+  };  
+
+  const onClickRemoveImage = async () => {
+    if (imageUrl) {
+      try {
+        const imageId = imageUrl.split('/').pop(); 
+        await axios.delete(`/upload/${imageId}`);
+        setImageUrl('');
+      } catch (err) {
+        console.warn(err);
+        showMessage('Ошибка при удалении изображения!', 'error');
+      }
     }
   };
-
-  const onClickRemoveImage = () => {  
-    setImageUrl('') 
-  };
+  
 
   const onChange = useCallback((value) => {
     setText(value);
@@ -57,13 +77,14 @@ export const AddPost = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     setValid(false)
+    showMessage('Создание статьи', 'info')
     try {
       // setLoading(true)
 
       const fileds = {
         title,
         imageUrl,
-        tags,
+        tags,        
         text,
       }
 
@@ -72,11 +93,12 @@ export const AddPost = () => {
         : await axios.post('/posts', fileds)
       
       setValid(true)
+      showMessage('Статья успешно создана')
       const _id = isEditing ? id : data._id
       nav(`/posts/${_id}`)
     } catch (err) {
       console.warn(err);
-      alert('Ошибка при создании статьи!')
+      showMessage('Ошибка при создании статьи!', 'error')
       setValid(true)
     }
   }
@@ -90,7 +112,7 @@ export const AddPost = () => {
         setText(data.text)
       }).catch(err => {
         console.warn(err);
-        alert('Ошибка при получении статьи!')
+        showMessage('Ошибка при получении статьи!', 'error')
       })
     }
   }, [id])
@@ -129,7 +151,7 @@ export const AddPost = () => {
           <Button variant="contained" color="error" onClick={onClickRemoveImage}>
             Удалить
           </Button>
-          <img className={styles.image} src={`${serverUrl}/${imageUrl}`} alt="Uploaded" />
+          <img className={styles.image} src={`${serverUrl}${imageUrl}`} alt="Uploaded" />
         </>
       )}
       <br />

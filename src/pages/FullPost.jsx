@@ -44,7 +44,7 @@ export const FullPost = () => {
         tags={data.tags}
         isFullPost
       >
-        <ReactMarkdown children={data.text} />
+        <ReactMarkdown children={data.text} components={{a: ({node, ...props}) => (<a {...props} target="_blank" rel="noopener noreferrer">{props.children}</a>)}} />
       </Post>
       {<CommentsBlock
         items={data.comments}

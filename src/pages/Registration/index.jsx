@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import { showMessage } from '../../components/Alert/showMessage';
 import styles from './Login.module.scss';
 import { fetchRegister, selectIsAuth } from '../../redux/slices/auth';
 import { useForm } from 'react-hook-form';
@@ -30,32 +31,33 @@ export const Registration = () => {
   })
 
   const handleChangeFile = async (event) => {
-    setLoad(false)
     try {
       const formData = new FormData()
       const file = event.target.files[0]
       formData.append('image', file)
       const { data } = await axios.post('/upload', formData)
       setAvatarUrl(data.url);
-      setValue('avatarUrl', data.url);  // Обновляем avatarUrl в форме
-      setLoad(true)
+      setValue('avatarUrl', data.url); 
     } catch (err) {
       console.warn(err);
-      alert('Ошибка при загрузке файла!')
-      setLoad(true)
+      showMessage('Ошибка при загрузке файла!', 'error')
     }
   };
   
   const onSubmit = async (values) => {
+    setLoad(true)
+    showMessage('Регистрация', 'info')
     const data = await dispatch(fetchRegister(values))
-
+    
     if(!data.payload) {
-      alert('Не удалось зарегиризоваться')
+      setLoad(false)
+      return showMessage('Не удалось зарегиризоваться', 'error')
     }
-
+    
     if('token' in data.payload) {
       localStorage.setItem('token', data.payload.token)
     }
+    setLoad(false)
   }
 
   if(isAuth) {
@@ -71,7 +73,7 @@ export const Registration = () => {
         <div className={styles.avatar} onClick={() => inputFileRef.current && inputFileRef.current.click()}>
           {
             Boolean(avatarUrl) 
-            ? <img src={`${serverUrl}/${avatarUrl}`} alt='Uploaded' />
+            ? <img src={`${serverUrl}${avatarUrl}`} alt='Uploaded' />
             : <Avatar sx={{ width: 100, height: 100 }} />
           }            
         </div>
@@ -103,7 +105,7 @@ export const Registration = () => {
           {...register('password', { required: 'Укажите пароль' })}
           fullWidth
         />              
-        <Button disabled={!isValid || !isLoad} type='submit' size="large" variant="contained" fullWidth>
+        <Button disabled={!isValid || isLoad} type='submit' size="large" variant="contained" fullWidth>
           Зарегистрироваться 
         </Button>
       </form>
