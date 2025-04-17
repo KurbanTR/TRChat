@@ -1,32 +1,19 @@
-import React, { useEffect, useState } from "react";
 import ReactMarkdown from 'react-markdown'
 import { Post } from "../components/Post";
 import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import { useParams } from "react-router-dom";
-import axios from "../axios";
-import { selectIsAuth } from "../redux/slices/auth";
-import { useSelector } from "react-redux";
+import { useGetPostByIdQuery } from "../redux/query/postsApi";
+import NotFound from "../components/NotFound";
+import isAuth from '../utils/isAuth'
 
 export const FullPost = () => {
-  const isAuth = useSelector(selectIsAuth)
-  const [data, setData] = useState()
-  const [isLoading, setLoading] = useState(true)
   const { id } = useParams()
 
-  useEffect(() => {
-    axios.get(`/posts/${id}`).then(res => {
-      setData(res.data)
-      setLoading(false)
-    }).catch(err => {
-      console.warn(err);
-      alert('Ошибка при получении статьи')
-    })
-  }, [id])
+  const { data, isLoading, isError } = useGetPostByIdQuery(id)
 
-  if (isLoading) {
-    return <Post isLoading={isLoading} isFullPost/>
-  }
+  if (isLoading) return <Post isLoading={isLoading} isFullPost/>
+  if (isError) return <NotFound message='Ошибка при получении статьи'/>
     
   return (
     <>

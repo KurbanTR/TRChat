@@ -1,23 +1,10 @@
 import Container from "@mui/material/Container";
-import { useDispatch, useSelector } from 'react-redux'
 import {Routes, Route} from "react-router-dom"
 import { Header } from "./components";
 import { Home, FullPost, Registration, AddPost, Login } from "./pages";
-import { useEffect } from "react";
-import { fetchAuthMe, selectIsAuth } from "./redux/slices/auth";
 import NotFound from "./components/NotFound";
 
-export const serverUrl = 'https://trchatback.onrender.com'
-// export const serverUrl = 'http://localhost:5137'
-
-function App() {
-  const dispatch = useDispatch()
-  const isAuth = useSelector(selectIsAuth)  
-
-  useEffect(() => {
-    dispatch(fetchAuthMe())    
-  }, [])
-  
+function App() {  
   return (
     <>
       <Header />

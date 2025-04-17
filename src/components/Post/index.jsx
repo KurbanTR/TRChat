@@ -9,9 +9,8 @@ import { Link } from 'react-router-dom';
 import styles from './Post.module.scss';
 import { UserInfo } from '../UserInfo';
 import { PostSkeleton } from './Skeleton';
-import { useDispatch } from 'react-redux';
-import { fetchRemovePost } from '../../redux/slices/posts';
-import { serverUrl } from '../../App';
+import { serverUrl } from '../../utils/serverUrl';
+import { useDeletePostMutation } from '../../redux/query/postsApi';
 
 export const Post = ({
   id,
@@ -27,16 +26,17 @@ export const Post = ({
   isLoading,
   isEditable,
 }) => {
-  const dispatch = useDispatch()
+  const [deletePost] = useDeletePostMutation()
 
   if (isLoading) {
     return <PostSkeleton />;
   }
 
-  const onClickRemove = () => {
+  const onClickRemove = async () => {
     if(window.confirm('Вы действительно хотите удалить статью?'))    
-    dispatch(fetchRemovePost(id))
+    await deletePost(id).unwrap()
   };
+
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
       {isEditable && (

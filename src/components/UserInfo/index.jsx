@@ -1,5 +1,5 @@
 import styles from './UserInfo.module.scss';
-import { serverUrl } from '../../App';
+import { serverUrl } from '../../utils/serverUrl';
 
 export const UserInfo = ({ avatarUrl, fullName, additionalText }) => {
 

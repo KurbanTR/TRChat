@@ -8,7 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import Skeleton from "@mui/material/Skeleton";
-import { serverUrl } from "../App";
+import { serverUrl } from '../utils/serverUrl';
 
 export const CommentsBlock = ({ items, children, isLoading = true }) => {
   return (

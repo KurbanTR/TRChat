@@ -1,26 +1,26 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import TextField from '@mui/material/TextField';
-import { useSelector } from 'react-redux';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
-import { selectIsAuth } from '../../redux/slices/auth';
 import axios from '../../axios'
-import { serverUrl } from '../../App';
+import { serverUrl } from '../../utils/serverUrl';
 import { showMessage } from '../../components/Alert/showMessage';
-
+import { useCreatePostMutation, useUpdatePostMutation } from '../../redux/query/postsApi';
+import isAuth from '../../utils/isAuth'
 
 export const AddPost = () => {
   const {id} = useParams()
+  const [createPost] = useCreatePostMutation();
+  const [updatePost] = useUpdatePostMutation();
 
   const nav = useNavigate()
   const inputFileRef = useRef(null)
   // const [isLoading, setLoading] = useState(false);
   const [isValid, setValid] = useState(false);
-  const isAuth = useSelector(selectIsAuth)
   const [imageUrl, setImageUrl] = useState('');
   const [text, setText] = useState('');
   const [title, setTitle] = useState('');
@@ -88,12 +88,10 @@ export const AddPost = () => {
         text,
       }
 
-      const { data } = isEditing 
-        ? await axios.patch(`/posts/${id}`, fileds)
-        : await axios.post('/posts', fileds)
+      const data = isEditing
+        ? await updatePost({ id, ...fileds }).unwrap()
+        : await createPost(fileds).unwrap();        
       
-      setValid(true)
-      showMessage('Статья успешно создана')
       const _id = isEditing ? id : data._id
       nav(`/posts/${_id}`)
     } catch (err) {

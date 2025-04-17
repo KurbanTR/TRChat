@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const instance = axios.create({
-    // baseURL: 'http://localhost:5137'
-    baseURL: 'https://trchatback.onrender.com'    
+    baseURL: 'http://localhost:5137'
+    // baseURL: 'https://trchatback.onrender.com'    
 })
 
 instance.interceptors.request.use((config) => {

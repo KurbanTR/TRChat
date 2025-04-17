@@ -159,6 +159,44 @@ $blue: #4361ee;
   .root {
     width: 92vw;
   }
+
+  .image {
+    height: 200px;
+  }
+
+  .skeleton {
+    width: 94vw;
+    border-radius: 8px;
+  }
+
+  .skeletonContent {
+    padding: 10px;
+  }
+
+  .skeletonUser {
+    &Details {
+      span {
+        width: 50px !important;
+        height: 15px !important;
+      }
+    }
+  }
+
+  .skeletonInfo {
+    margin-left: 20px;
+
+    span {
+      height: 30px !important;
+    }
+  }
+
+  .skeletonTags {
+    span {
+      width: 30px !important;
+      height: 20px !important;
+      margin-right: 10px;
+    }
+  }
 }
 
 @media (max-width: 480px) {
@@ -173,10 +211,6 @@ $blue: #4361ee;
 
   .indention {
     padding-left: 25px;
-  }
-
-  .image {
-    height: 200px;
   }
 
   .title {

@@ -1,49 +1,37 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Grid from '@mui/material/Grid';
-import { Post } from '../components/Post';
-import { TagsBlock } from '../components/TagsBlock';
-import { CommentsBlock } from '../components/CommentsBlock';
-import { fetchPosts, fetchTags } from '../redux/slices/posts';
-import { useParams } from 'react-router-dom';
-import { fetchComments } from '../redux/slices/comments';
-import NotFound from '../components/NotFound';
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import Grid from '@mui/material/Grid'
+import { Post } from '../components/Post'
+import { TagsBlock } from '../components/TagsBlock'
+import { CommentsBlock } from '../components/CommentsBlock'
+import NotFound from '../components/NotFound'
+import { useGetPostsQuery, useGetTagsQuery } from '../redux/query/postsApi'
+import { useGetCommentsQuery } from '../redux/query/commentsApi'
+import { useGetMeQuery } from '../redux/query/authApi'
 
 export const Home = () => {
-  const {tag} = useParams()
-  const dispatch = useDispatch()
+  const { tag } = useParams()
   const [tab, setTab] = useState('new')
-  const userData = useSelector((state) => state.auth.data)
-  const { posts, tags } = useSelector(state => state.posts)
-  const { comments } = useSelector(state => state.comments)
+  const { data: userData } = useGetMeQuery()
 
-  const isPostsLoading = posts.status === 'loading'
-  const isTagsLoading = tags.status === 'loading'
+  const { data: posts = [], isLoading: isPostsLoading } = useGetPostsQuery({ sort: tab, tag })
+  const { data: tags = [], isLoading: isTagsLoading } = useGetTagsQuery()
+  const { data: comments = [], isLoading: isCommentsLoading } = useGetCommentsQuery()
+
   const isPostsByTag = Boolean(tag)
 
-  useEffect(() => {
-    dispatch(fetchPosts({sort: tab, tag}))
-    dispatch(fetchTags())
-    dispatch(fetchComments())
-  }, [dispatch, tab, tag])
+  const handleChange = (_, newValue) => setTab(newValue)
 
-  const handleChange = (event, newValue) => {
-    setTab(newValue)
-  }
-  
-  if (!isPostsLoading && posts.items.length < 1) return <NotFound message="Нет статей"/>
+  if (!isPostsLoading && posts.length < 1) return <NotFound message="Нет статей" />
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div className='container'>
-        {isPostsByTag
-        ?
-          <h1 style={{color: 'black', opacity: .3, fontSize: '3em'}}>
-            #{tag}
-          </h1>
-        : 
+        {isPostsByTag ? (
+          <h1 style={{ color: 'black', opacity: .3, fontSize: '3em' }}>#{tag}</h1>
+        ) : (
           <Tabs
             value={tab}
             onChange={handleChange}
@@ -75,12 +63,13 @@ export const Home = () => {
           >
             <Tab label="Новые" value="new" />
             <Tab label="Популярные" value="popular" />
-          </Tabs>    
-        }
+          </Tabs>
+        )}
       </div>
-      <Grid container spacing={{ xs: 1, sm: 2, md: 4 }} sx={{display: {xs: 'block', sm: 'flex'}}}>
-        <Grid xs={8} item>
-          {(isPostsLoading ? [...Array(5)] : posts.items).map((item, index) => (
+
+      <Grid container spacing={{ xs: 1, sm: 2, md: 4 }} sx={{ display: { xs: 'block', sm: 'flex' } }}>
+        <Grid item xs={12} sm={8}>
+          {(isPostsLoading ? [...Array(5)] : posts).map((item, index) => (
             <Post
               key={item?._id || index}
               id={item?._id}
@@ -92,18 +81,18 @@ export const Home = () => {
               }}
               createdAt={item?.createAt}
               viewsCount={item?.viewsCount}
-              commentsCount={comments.items.length}
+              commentsCount={comments.length}
               tags={item?.tags}
               isLoading={isPostsLoading}
               isEditable={userData?._id === item?.user?._id}
             />
           ))}
         </Grid>
-        <Grid xs={4} item sx={{paddingLeft: {xs: 0, sm: 2}}}>
-          { (tags.status === 'loaded' && tags.items.length !== 0) && <TagsBlock items={tags.items} isLoading={isTagsLoading} />}
-          { (comments.status === 'loaded' && comments.items.length !== 0) && <CommentsBlock items={comments.items} isLoading={false} />}
+        <Grid xs={4} item sx={{ paddingLeft: { xs: 0, sm: 2 } }}>
+          {tags.length > 0 && <TagsBlock items={tags} isLoading={isTagsLoading} />}
+          {comments.length > 0 && <CommentsBlock items={comments} isLoading={isCommentsLoading} />}
         </Grid>
       </Grid>
     </div>
-  );
-};
+  )
+}

@@ -3,12 +3,14 @@ import Stack from "@mui/material/Stack";
 import Skeleton from "@mui/material/Skeleton";
 
 import styles from "./Post.module.scss";
+import { useMediaQuery } from "@mui/material";
 
 export const PostSkeleton = () => {
+  const isMobile = useMediaQuery('(max-width:600px)');
   return (
     <div className={styles.skeleton}>
       <Stack spacing={1}>
-        <Skeleton variant="rectangular" width="100%" height={300} />
+        <Skeleton variant="rectangular" width="100%" height={isMobile ? 200 : 300} />
         <div className={styles.skeletonContent}>
           <div className={styles.skeletonUser}>
             <Skeleton

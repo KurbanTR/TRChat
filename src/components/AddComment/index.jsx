@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from "react-redux";
 import styles from "./AddComment.module.scss";
 import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import axios from "../../axios";
 import { useParams } from 'react-router-dom';
-import { serverUrl } from '../../App';
+import { serverUrl } from '../../utils/serverUrl';
 import { showMessage } from '../Alert/showMessage';
+import { useGetMeQuery } from '../../redux/query/authApi';
+import { useCreateCommentMutation } from '../../redux/query/commentsApi';
 
 export const Index = () => {
   const [text, setText] = useState('');
   const [isValid, setValid] = useState(false);
-  const { data } = useSelector(state => state.auth)
+  const [createComment, { isLoading }] = useCreateCommentMutation();
+  const { data } = useGetMeQuery()
   const { id } = useParams()
 
   useEffect(() => {
@@ -24,14 +25,7 @@ export const Index = () => {
     event.preventDefault();
     setValid(false)
     try {
-
-      const fileds = {
-        text,
-        postId: id
-      }
-
-      const { data } = await axios.post(`/comments/${id}`, fileds)      
-      console.log(data);
+      await createComment({ postId: id, text }).unwrap();  
       setText('')
       setValid(true)      
     } catch (err) {
@@ -45,7 +39,8 @@ export const Index = () => {
       <div className={styles.root}>
         <Avatar
           classes={{ root: styles.avatar }}
-          src={`${serverUrl}${data.avatarUrl}`}
+          src={`${serverUrl}${data?.avatarUrl}`}
+          alt={data?.fullName}
         />
         <form onSubmit={onSubmit} className={styles.form}>
           <TextField
@@ -57,7 +52,7 @@ export const Index = () => {
             multiline
             fullWidth
           />
-          <Button disabled={!isValid} type="submit" variant="contained">Отправить</Button>
+          <Button disabled={!isValid || isLoading} type="submit" variant="contained">Отправить</Button>
         </form>
       </div>
     </>
