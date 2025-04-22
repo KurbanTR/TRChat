@@ -37,7 +37,7 @@ export const FullPost = () => {
         items={data.comments}
         isLoading={false}
       >
-        {isAuth && <Index />}
+        {isAuth() && <Index />}
       </CommentsBlock>}
     </>
   );

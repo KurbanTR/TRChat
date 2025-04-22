@@ -133,7 +133,7 @@ export const AddPost = () => {
     console.log(inputFileRef.current);
   }, [inputFileRef])
 
-  if(!localStorage.getItem('token') && !isAuth) {
+  if(!localStorage.getItem('token') && !isAuth()) {
     return <Navigate to="/"/>
   }
 

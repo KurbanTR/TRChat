@@ -51,7 +51,7 @@ export const Registration = () => {
     }
   }
 
-  if (isAuth) {
+  if (isAuth()) {
     return <Navigate to="/" />
   }
 

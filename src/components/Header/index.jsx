@@ -21,7 +21,7 @@ export const Header = () => {
             <div>TRChat</div>
           </Link>
           <div className={styles.buttons}>
-            {isAuth ? (
+            {isAuth() ? (
               <>
                 <Link to="/add-post">
                   <Button variant="contained">Написать статью</Button>

@@ -35,7 +35,7 @@ export const Login = () => {
     }
   }
 
-  if (isAuth) {
+  if (isAuth()) {
     return <Navigate to="/" />
   }
 
